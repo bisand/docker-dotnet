@@ -19,7 +19,6 @@ WORKDIR /home/runtime
 RUN chown -R runtime:runtime /home/runtime
 USER runtime
 
-RUN echo "${VERSION}" > test.txt
 RUN wget https://dot.net/v1/dotnet-install.sh
 RUN chmod +x ./dotnet-install.sh
 RUN sed -i "s|--waitretry 2||g" dotnet-install.sh

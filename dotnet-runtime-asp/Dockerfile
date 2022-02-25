@@ -24,7 +24,6 @@ RUN chmod +x ./dotnet-install.sh
 RUN sed -i "s|--waitretry 2||g" dotnet-install.sh
 RUN sed -i "s|--connect-timeout 15|-T 15|g" dotnet-install.sh
 RUN ./dotnet-install.sh --runtime aspnetcore --channel LTS $VERSION
-
 RUN rm -f ./dotnet-install.sh
 
 # Register dotnet cli to path

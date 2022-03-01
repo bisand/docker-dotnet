@@ -1,0 +1,9 @@
+
+version: '3.4'
+
+services:
+  demo:
+    image: demo
+    build:
+      context: .
+      dockerfile: demo/Dockerfile

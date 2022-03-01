@@ -6,6 +6,10 @@ sudo docker build --build-arg dotnet_version="--version ${DOTNET_VERSION}" dotne
 sudo docker build --build-arg dotnet_version="--version ${DOTNET_VERSION}" dotnet-runtime/. -t bisand/dotnet-runtime:$DOTNET_VERSION
 sudo docker build --build-arg dotnet_version="--version ${DOTNET_VERSION}" dotnet-runtime-asp/. -t bisand/dotnet-runtime-asp:$DOTNET_VERSION
 
-sudo docker push bisand/dotnet-build:$DOTNET_VERSION
-sudo docker push bisand/dotnet-runtime:$DOTNET_VERSION
-sudo docker push bisand/dotnet-runtime-asp:$DOTNET_VERSION
+sudo docker tag bisand/dotnet-build:$DOTNET_VERSION bisand/dotnet-build:latest
+sudo docker tag bisand/dotnet-runtime:$DOTNET_VERSION bisand/dotnet-runtime:latest
+sudo docker tag bisand/dotnet-runtime-asp:$DOTNET_VERSION bisand/dotnet-runtime-asp:latest
+
+sudo docker push --all-tags bisand/dotnet-build
+sudo docker push --all-tags bisand/dotnet-runtime
+sudo docker push --all-tags bisand/dotnet-runtime-asp

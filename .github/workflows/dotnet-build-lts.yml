@@ -1,4 +1,4 @@
-name: Docker Images CI
+name: Dotnet Build LTS
 
 on:
   schedule:

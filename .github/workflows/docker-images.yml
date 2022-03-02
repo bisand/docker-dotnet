@@ -24,3 +24,6 @@ jobs:
     - 
       name: Build the Docker images
       run: ./build.sh
+    -
+      name: Push docker images
+      uses: docker/build-push-action@v2

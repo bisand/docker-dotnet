@@ -24,8 +24,11 @@ jobs:
     - name: Set Repo name env
       run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
 
+    - name: Set dotnet channel env
+      run: echo "DOTNET_CHANNEL=LTS" >> $GITHUB_ENV
+
     - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
 
     - name: Log repository name and dotnet version
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"
@@ -34,7 +37,7 @@ jobs:
       uses: docker/build-push-action@v2.9.0
       with:
         # List of build-time variables
-        build-args: dotnet_version="--version ${{ env.DOTNET_VERSION }}"
+        build-args: dotnet_version="${{ env.DOTNET_VERSION }}", dotnet_channel="${{ env.DOTNET_CHANNEL }}"
         # Path to the Dockerfile
         file: ./${{ env.REPO_NAME }}/Dockerfile
         # List of tags

@@ -1,7 +1,9 @@
 ARG dotnet_version
+ARG dotnet_channel
 
 FROM alpine
 ENV VERSION=$dotnet_version
+ENV CHANNEL=$dotnet_channel
 
 # Install .net dependencies
 RUN apk add bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
@@ -21,7 +23,7 @@ RUN wget https://dot.net/v1/dotnet-install.sh
 RUN chmod +x ./dotnet-install.sh
 RUN sed -i "s|--waitretry 2||g" dotnet-install.sh
 RUN sed -i "s|--connect-timeout 15|-T 15|g" dotnet-install.sh
-RUN ./dotnet-install.sh --channel LTS $VERSION
+RUN ./dotnet-install.sh --channel $CHANNEL --version $VERSION
 RUN rm -f ./dotnet-install.sh
 
 # Register dotnet cli to path

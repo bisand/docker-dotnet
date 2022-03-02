@@ -1,4 +1,4 @@
-name: Dotnet Build LTS
+name: Deploy dotnet-build Current
 
 on:
   schedule:
@@ -25,7 +25,7 @@ jobs:
       run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
 
     - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/Current/latest.version)" >> $GITHUB_ENV
 
     - name: Log repository name and dotnet version
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"

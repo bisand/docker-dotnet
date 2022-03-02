@@ -24,7 +24,7 @@ jobs:
     - name: Set env
       run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
     - name: Test
-      run: echo $DOTNET_VERSION
+      run: echo "Building with dotnet version $DOTNET_VERSION"
     - name: Build and push dotnet-build
       # You may pin to the exact commit or the version.
       # uses: docker/build-push-action@7f9d37fa544684fb73bfe4835ed7214c255ce02b
@@ -73,7 +73,7 @@ jobs:
         # List of SSH agent socket or keys to expose to the build
         #ssh: # optional
         # List of tags
-        tags: ${{ env.DOTNET_VERSION }}, latest
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/docker-build:${{ env.DOTNET_VERSION }}, ${{ secrets.DOCKER_HUB_USERNAME }}/docker-build:latest
         # Sets the target stage to build
         #target: # optional
         # Ulimit options (e.g., nofile=1024:1024)

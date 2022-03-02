@@ -15,6 +15,6 @@ sudo docker tag bisand/dotnet-build:$DOTNET_VERSION bisand/dotnet-build:latest
 sudo docker tag bisand/dotnet-runtime:$DOTNET_VERSION bisand/dotnet-runtime:latest
 sudo docker tag bisand/dotnet-runtime-asp:$DOTNET_VERSION bisand/dotnet-runtime-asp:latest
 
-sudo docker push --all-tags bisand/dotnet-build
-sudo docker push --all-tags bisand/dotnet-runtime
-sudo docker push --all-tags bisand/dotnet-runtime-asp
+# sudo docker push --all-tags bisand/dotnet-build
+# sudo docker push --all-tags bisand/dotnet-runtime
+# sudo docker push --all-tags bisand/dotnet-runtime-asp

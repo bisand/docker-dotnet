@@ -47,16 +47,7 @@ jobs:
     - name: Create cache file
       run: echo "${{ env.DOTNET_VERSION }} > ${{ env.REPO_NAME }}-${{ env.DOTNET_CHANNEL }}.json"
 
-    # Compare the response to the previous run, using a hash of the response as the cache key
-    - name: Fetch Cache
-      id: cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.REPO_NAME }}-${{ env.DOTNET_CHANNEL }}.json
-        key: ${{ hashFiles('${{ env.REPO_NAME }}-${{ env.DOTNET_CHANNEL }}.json') }}
-
     - name: Build and push ${{ env.REPO_NAME }}
-      if: steps.cache.outputs.cache-hit != 'true'
       uses: docker/build-push-action@v2.9.0
       with:
         # Always attempt to pull a newer version of the image
@@ -99,7 +90,6 @@ jobs:
       run: echo "${{ env.DOTNET_VERSION }} > ${{ env.REPO_NAME }}-${{ env.DOTNET_CHANNEL }}.json"
 
     - name: Build and push ${{ env.REPO_NAME }}
-      if: steps.cache.outputs.cache-hit != 'true'
       uses: docker/build-push-action@v2.9.0
       with:
         # Always attempt to pull a newer version of the image

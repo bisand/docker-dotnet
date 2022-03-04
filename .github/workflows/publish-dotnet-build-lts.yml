@@ -58,5 +58,7 @@ jobs:
         # List of tags
         tags: |
           ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}
           ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:lts
           ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:latest

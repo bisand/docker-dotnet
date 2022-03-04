@@ -17,7 +17,7 @@ jobs:
       run: echo "REPO_NAME=dotnet-runtime" >> $GITHUB_ENV
 
     - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=Current" >> $GITHUB_ENV
+      run: echo "DOTNET_CHANNEL=current" >> $GITHUB_ENV
 
     - name: Set dotnet version env
       run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
@@ -30,7 +30,7 @@ jobs:
       run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --build-arg dotnet_channel=${{ env.DOTNET_CHANNEL }} --build-arg dotnet_version=${{ env.DOTNET_VERSION }} --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}-$(date +%s)
 
     - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=LTS" >> $GITHUB_ENV
+      run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
 
     - name: Set dotnet version env
       run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV

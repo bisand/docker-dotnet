@@ -16,6 +16,9 @@ jobs:
     - name: Set Repo name env
       run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
 
+    - name: Set dotnet channel env
+      run: echo "DOTNET_CHANNEL=Current" >> $GITHUB_ENV
+
     - name: Set dotnet version env
       run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
 
@@ -28,9 +31,6 @@ jobs:
     - name: Set patch version env
       run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
 
-    - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=Current" >> $GITHUB_ENV
-
     - name: Log repository name and dotnet version
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"
 
@@ -40,6 +40,18 @@ jobs:
 
     - name: Set dotnet channel env
       run: echo "DOTNET_CHANNEL=LTS" >> $GITHUB_ENV
+
+    - name: Set dotnet version env
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
+
+    - name: Set major version env
+      run: echo "VERSION_MAJOR=$(cut -d '.' -f 1 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
+
+    - name: Set minor version env
+      run: echo "VERSION_MINOR=$(cut -d '.' -f 2 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
+
+    - name: Set patch version env
+      run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
 
     - name: Log repository name and dotnet version
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"

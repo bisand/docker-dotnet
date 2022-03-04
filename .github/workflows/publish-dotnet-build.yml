@@ -30,7 +30,7 @@ jobs:
       run: echo "DOTNET_CHANNEL=current" >> $GITHUB_ENV
 
     - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^}/latest.version)" >> $GITHUB_ENV
 
     - name: Set major version env
       run: echo "VERSION_MAJOR=$(cut -d '.' -f 1 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
@@ -69,7 +69,7 @@ jobs:
       run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
 
     - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^^}/latest.version)" >> $GITHUB_ENV
 
     - name: Set major version env
       run: echo "VERSION_MAJOR=$(cut -d '.' -f 1 <<< $DOTNET_VERSION)" >> $GITHUB_ENV

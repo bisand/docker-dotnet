@@ -33,7 +33,7 @@ jobs:
       run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
 
     - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_CHANNEL/latest.version)" >> $GITHUB_ENV
+      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^^}/latest.version)" >> $GITHUB_ENV
 
     - name: Log repository name and dotnet version
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"

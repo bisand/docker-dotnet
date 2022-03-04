@@ -36,6 +36,10 @@ jobs:
     - name: Build and push ${{ env.REPO_NAME }}
       uses: docker/build-push-action@v2.9.0
       with:
+        # Always attempt to pull a newer version of the image
+        pull: true
+        # Push is a shorthand for --output=type=registry
+        push: true
         # List of build-time variables
         build-args: |
           dotnet_channel=${{ env.DOTNET_CHANNEL }}

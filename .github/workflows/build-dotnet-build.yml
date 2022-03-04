@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build dotnet-build
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
 
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:current-$(date +%s)
+      run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:current-$(date +%s)
 
     - name: Set dotnet channel env
       run: echo "DOTNET_CHANNEL=LTS" >> $GITHUB_ENV
@@ -46,4 +46,4 @@ jobs:
 
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:LTS-$(date +%s)
+      run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:LTS-$(date +%s)

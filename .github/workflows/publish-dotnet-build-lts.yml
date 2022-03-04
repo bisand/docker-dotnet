@@ -43,4 +43,7 @@ jobs:
         # Path to the Dockerfile
         file: ./${{ env.REPO_NAME }}/Dockerfile
         # List of tags
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION }}, ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:latest
+        tags: |
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:lts
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:latest

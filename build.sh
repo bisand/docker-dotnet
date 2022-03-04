@@ -1,6 +1,9 @@
 #!/bin/sh
-# Current version: https://dotnetcli.azureedge.net/dotnet/Runtime/Current/latest.version
-# LTS version: https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version
+
+# SDK Current version: https://dotnetcli.azureedge.net/dotnet/Sdk/Current/latest.version
+# SDK LTS version: https://dotnetcli.azureedge.net/dotnet/Sdk/LTS/latest.version
+# Runtime Current version: https://dotnetcli.azureedge.net/dotnet/Runtime/Current/latest.version
+# Runtime LTS version: https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version
 
 DOTNET_VERSION_DEFAULTVALUE=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)
 DOTNET_VERSION="${1:-$DOTNET_VERSION_DEFAULTVALUE}"

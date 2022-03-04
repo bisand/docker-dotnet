@@ -1,9 +1,12 @@
-ARG dotnet_version
-ARG dotnet_channel
-
 FROM alpine
-ENV VERSION=$dotnet_version
+
+ARG dotnet_channel
+ARG dotnet_version
+
 ENV CHANNEL=$dotnet_channel
+ENV VERSION=$dotnet_version
+
+RUN echo $VERSION
 
 # Install .net dependencies
 RUN apk add bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib

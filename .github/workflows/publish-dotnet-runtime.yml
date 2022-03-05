@@ -41,8 +41,21 @@ jobs:
     - name: Set patch version env
       run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
 
+    # Optionally, use `jq` to pull one or more fields from the JSON to include in the SMS message
+    - name: Parse data
+      id: parse_data
+      run: echo '::set-output name=DOTNET_VERSION_CURRENT::'$(jq -r '.DOTNET_VERSION_CURRENT' dotnet_versions.json)
+        
+    # Compare the response to the previous run, using a hash of the response as the cache key
+    - name: Fetch Cache
+      id: cache
+      uses: actions/cache@v2
+      with:
+        path: dotnet_versions.json
+        key: ${{ hashFiles('dotnet_versions.json') }}
+    
     - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"
+      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION ($DOTNET_VERSION_CURRENT) (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"
 
     - name: Create cache file
       run: echo "${{ env.DOTNET_VERSION }} > ${{ env.REPO_NAME }}-${{ env.DOTNET_CHANNEL }}.json"

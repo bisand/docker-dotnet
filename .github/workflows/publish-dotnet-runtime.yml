@@ -82,7 +82,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CACHE_FILENAME }}
-        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('${{ env.CACHE_FILENAME }}') }}
+        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles(env.CACHE_FILENAME) }}
     
     - name: Build and push ${{ env.REPO_NAME }} (Current)
       uses: docker/build-push-action@v2.9.0

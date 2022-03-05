@@ -34,11 +34,14 @@ jobs:
     - name: Create cache file name
       run: echo "CACHE_FILENAME=$REPO_NAME.txt" >> $GITHUB_ENV
 
-    - name: Create cache file (Current)
-      run: echo "'current $DOTNET_VERSION_CURRENT' > $CACHE_FILENAME"
-
-    - name: Create cache file (LTS)
-      run: echo "'lts $DOTNET_VERSION_LTS' >> $CACHE_FILENAME"
+    - name: Create cache file
+      run: |
+        touch $CACHE_FILENAME
+        echo current $DOTNET_VERSION_CURRENT >> $CACHE_FILENAME
+        echo lts $DOTNET_VERSION_LTS >> $CACHE_FILENAME
+        echo "cat $CACHE_FILENAME"
+        echo "ls -a ."
+        echo "ls -a ${{ github.workspace }}"
 
     - name: Where am I?
       run: echo $(pwd)

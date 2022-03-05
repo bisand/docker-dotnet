@@ -59,7 +59,7 @@ jobs:
       run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_LTS (LTS) (Major $VERSION_MAJOR_LTS Minor $VERSION_MINOR_LTS Patch $VERSION_PATCH_LTS)"
 
     - name: Create cache file
-      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.json"
+      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.txt"
 
     # Compare the response to the previous run, using a hash of the response as the cache key
     - name: Fetch Cache
@@ -67,7 +67,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ./
-        key: ${{ hashFiles('${{ env.REPO_NAME }}-current.txt', '${{ env.REPO_NAME }}-lts.txt') }}
+        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('${{ env.REPO_NAME }}-current.txt', '${{ env.REPO_NAME }}-lts.txt') }}
     
     - name: Build and push ${{ env.REPO_NAME }}
       uses: docker/build-push-action@v2.9.0

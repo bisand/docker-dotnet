@@ -32,7 +32,7 @@ jobs:
       run: echo "DOTNET_VERSION_LTS=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
 
     - name: Create cache file name
-      run: echo "CACHE_FILENAME=$REPO_NAME.txt"
+      run: echo "CACHE_FILENAME=$($REPO_NAME.txt)"
 
     - name: Create cache file (Current)
       run: echo "'current $DOTNET_VERSION_CURRENT\n' > $CACHE_FILENAME"

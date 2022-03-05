@@ -43,6 +43,9 @@ jobs:
     - name: Where am I?
       run: echo $(pwd)
 
+    - name: List files
+      run: echo $(ls -hal)
+
     - name: Print file hash
       run: echo "${{ hashFiles('**/dotnet-runtime.txt') }}"
 

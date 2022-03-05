@@ -25,11 +25,17 @@ jobs:
     - name: Set Repo name env
       run: echo "REPO_NAME=dotnet-runtime" >> $GITHUB_ENV
 
-    - name: Set dotnet version env
+    - name: Get latest dotnet version (Current)
       run: echo "DOTNET_VERSION_CURRENT=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/Current/latest.version)" >> $GITHUB_ENV
 
-    - name: Set dotnet version env
+    - name: Get latest dotnet version (LTS)
       run: echo "DOTNET_VERSION_LTS=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
+
+    - name: Create cache file (Current)
+      run: echo "${{ env.DOTNET_VERSION_CURRENT }} > ${{ env.REPO_NAME }}-current.txt"
+
+    - name: Create cache file (LTS)
+      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.txt"
 
     - name: Set major version env
       run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
@@ -40,12 +46,6 @@ jobs:
     - name: Set patch version env
       run: echo "VERSION_PATCH_CURRENT=$(cut -d '.' -f 3 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
 
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_CURRENT (Current) (Major $VERSION_MAJOR_CURRENT Minor $VERSION_MINOR_CURRENT Patch $VERSION_PATCH_CURRENT)"
-
-    - name: Create cache file
-      run: echo "${{ env.DOTNET_VERSION_CURRENT }} > ${{ env.REPO_NAME }}-current.txt"
-
     - name: Set major version env
       run: echo "VERSION_MAJOR_LTS=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_LTS)" >> $GITHUB_ENV
 
@@ -55,11 +55,11 @@ jobs:
     - name: Set patch version env
       run: echo "VERSION_PATCH_LTS=$(cut -d '.' -f 3 <<< $DOTNET_VERSION_LTS)" >> $GITHUB_ENV
 
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_LTS (LTS) (Major $VERSION_MAJOR_LTS Minor $VERSION_MINOR_LTS Patch $VERSION_PATCH_LTS)"
+    - name: Log repository name and dotnet version (Current)
+      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_CURRENT (Current) (Major $VERSION_MAJOR_CURRENT Minor $VERSION_MINOR_CURRENT Patch $VERSION_PATCH_CURRENT)"
 
-    - name: Create cache file
-      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.txt"
+    - name: Log repository name and dotnet version (LTS)
+      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_LTS (LTS) (Major $VERSION_MAJOR_LTS Minor $VERSION_MINOR_LTS Patch $VERSION_PATCH_LTS)"
 
     # Compare the response to the previous run, using a hash of the response as the cache key
     - name: Fetch Cache
@@ -69,7 +69,7 @@ jobs:
         path: ./
         key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('${{ env.REPO_NAME }}-current.txt', '${{ env.REPO_NAME }}-lts.txt') }}
     
-    - name: Build and push ${{ env.REPO_NAME }}
+    - name: Build and push ${{ env.REPO_NAME }} (Current)
       uses: docker/build-push-action@v2.9.0
       if: steps.cache.outputs.cache-hit != 'true'
       with:
@@ -90,8 +90,7 @@ jobs:
           ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR_CURRENT }}
           ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:current
 
-
-    - name: Build and push ${{ env.REPO_NAME }}
+    - name: Build and push ${{ env.REPO_NAME }} (LTS)
       uses: docker/build-push-action@v2.9.0
       if: steps.cache.outputs.cache-hit != 'true'
       with:

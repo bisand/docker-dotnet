@@ -25,27 +25,53 @@ jobs:
     - name: Set Repo name env
       run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
 
-    # Channel
-    - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=current" >> $GITHUB_ENV
+    - name: Get latest dotnet version (Current)
+      run: echo "DOTNET_VERSION_CURRENT=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/Current/latest.version)" >> $GITHUB_ENV
 
-    - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^}/latest.version)" >> $GITHUB_ENV
+    - name: Get latest dotnet version (LTS)
+      run: echo "DOTNET_VERSION_LTS=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/LTS/latest.version)" >> $GITHUB_ENV
+
+    - name: Create cache file (Current)
+      run: echo "${{ env.DOTNET_VERSION_CURRENT }} > ${{ env.REPO_NAME }}-current.txt"
+
+    - name: Create cache file (LTS)
+      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.txt"
 
     - name: Set major version env
-      run: echo "VERSION_MAJOR=$(cut -d '.' -f 1 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
+      run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
 
     - name: Set minor version env
-      run: echo "VERSION_MINOR=$(cut -d '.' -f 2 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
+      run: echo "VERSION_MINOR_CURRENT=$(cut -d '.' -f 2 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
 
     - name: Set patch version env
-      run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
+      run: echo "VERSION_PATCH_CURRENT=$(cut -d '.' -f 3 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
 
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"
+    - name: Set major version env
+      run: echo "VERSION_MAJOR_LTS=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_LTS)" >> $GITHUB_ENV
 
-    - name: Build and push ${{ env.REPO_NAME }}
+    - name: Set minor version env
+      run: echo "VERSION_MINOR_LTS=$(cut -d '.' -f 2 <<< $DOTNET_VERSION_LTS)" >> $GITHUB_ENV
+
+    - name: Set patch version env
+      run: echo "VERSION_PATCH_LTS=$(cut -d '.' -f 3 <<< $DOTNET_VERSION_LTS)" >> $GITHUB_ENV
+
+    - name: Log repository name and dotnet version (Current)
+      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_CURRENT (Current) (Major $VERSION_MAJOR_CURRENT Minor $VERSION_MINOR_CURRENT Patch $VERSION_PATCH_CURRENT)"
+
+    - name: Log repository name and dotnet version (LTS)
+      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION_LTS (LTS) (Major $VERSION_MAJOR_LTS Minor $VERSION_MINOR_LTS Patch $VERSION_PATCH_LTS)"
+
+    # Compare the response to the previous run, using a hash of the response as the cache key
+    - name: Fetch Cache
+      id: cache
+      uses: actions/cache@v2
+      with:
+        path: ./
+        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('${{ env.REPO_NAME }}-current.txt', '${{ env.REPO_NAME }}-lts.txt') }}
+    
+    - name: Build and push ${{ env.REPO_NAME }} (Current)
       uses: docker/build-push-action@v2.9.0
+      if: steps.cache.outputs.cache-hit != 'true'
       with:
         # Always attempt to pull a newer version of the image
         pull: true
@@ -53,38 +79,20 @@ jobs:
         push: true
         # List of build-time variables
         build-args: |
-          dotnet_channel=${{ env.DOTNET_CHANNEL }}
-          dotnet_version=${{ env.DOTNET_VERSION }}
+          dotnet_channel=current
+          dotnet_version=${{ env.DOTNET_VERSION_CURRENT }}
         # Path to the Dockerfile
         file: ./${{ env.REPO_NAME }}/Dockerfile
         # List of tags
         tags: |
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION_CURRENT }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR_CURRENT }}.${{ env.VERSION_MINOR_CURRENT }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR_CURRENT }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:current
 
-    # Channel
-    - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
-
-    - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^^}/latest.version)" >> $GITHUB_ENV
-
-    - name: Set major version env
-      run: echo "VERSION_MAJOR=$(cut -d '.' -f 1 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
-
-    - name: Set minor version env
-      run: echo "VERSION_MINOR=$(cut -d '.' -f 2 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
-
-    - name: Set patch version env
-      run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
-
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION (Major $VERSION_MAJOR Minor $VERSION_MINOR Patch $VERSION_PATCH)"
-
-    - name: Build and push ${{ env.REPO_NAME }}
+    - name: Build and push ${{ env.REPO_NAME }} (LTS)
       uses: docker/build-push-action@v2.9.0
+      if: steps.cache.outputs.cache-hit != 'true'
       with:
         # Always attempt to pull a newer version of the image
         pull: true
@@ -92,13 +100,13 @@ jobs:
         push: true
         # List of build-time variables
         build-args: |
-          dotnet_channel=${{ env.DOTNET_CHANNEL }}
-          dotnet_version=${{ env.DOTNET_VERSION }}
+          dotnet_channel=lts
+          dotnet_version=${{ env.DOTNET_VERSION_LTS }}
         # Path to the Dockerfile
         file: ./${{ env.REPO_NAME }}/Dockerfile
         # List of tags
         tags: |
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR }}
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_VERSION_LTS }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR_LTS }}.${{ env.VERSION_MINOR_LTS }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.VERSION_MAJOR_LTS }}
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:lts

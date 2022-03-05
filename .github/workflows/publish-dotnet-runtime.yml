@@ -35,10 +35,10 @@ jobs:
       run: echo "CACHE_FILENAME=$REPO_NAME.txt" >> $GITHUB_ENV
 
     - name: Create cache file (Current)
-      run: echo "'current $DOTNET_VERSION_CURRENT\n' > $CACHE_FILENAME"
+      run: echo "'current $DOTNET_VERSION_CURRENT' > $CACHE_FILENAME"
 
     - name: Create cache file (LTS)
-      run: echo "'lts $DOTNET_VERSION_LTS\n' >> $CACHE_FILENAME"
+      run: echo "'lts $DOTNET_VERSION_LTS' >> $CACHE_FILENAME"
 
     - name: Where am I?
       run: echo $(pwd)
@@ -47,7 +47,7 @@ jobs:
       run: echo $(ls -hal)
 
     - name: Print file hash
-      run: echo "${{ hashFiles('**/dotnet-runtime.txt') }}"
+      run: echo "${{ hashFiles('dotnet-runtime.txt') }}"
 
     - name: Set major version env
       run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV

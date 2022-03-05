@@ -2,42 +2,45 @@ name: Build dotnet-build
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
+    paths:
+      - "dotnet-build/**"
+
   pull_request:
-    branches: [ master ]
+    branches: [master]
+    paths:
+      - "dotnet-build/**"
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set Repo name env
-      run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
+      - name: Set Repo name env
+        run: echo "REPO_NAME=dotnet-build" >> $GITHUB_ENV
 
-    - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=current" >> $GITHUB_ENV
+      - name: Set dotnet channel env
+        run: echo "DOTNET_CHANNEL=current" >> $GITHUB_ENV
 
-    - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^}/latest.version)" >> $GITHUB_ENV
+      - name: Set dotnet version env
+        run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^}/latest.version)" >> $GITHUB_ENV
 
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"
+      - name: Log repository name and dotnet version
+        run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"
 
-    - uses: actions/checkout@v2
-    - name: Build ${{ env.REPO_NAME }} with dotnet ${{ env.DOTNET_CHANNEL }} version ${{ env.DOTNET_VERSION }}
-      run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --build-arg dotnet_channel=${{ env.DOTNET_CHANNEL }} --build-arg dotnet_version=${{ env.DOTNET_VERSION }} --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}-$(date +%s)
+      - uses: actions/checkout@v2
+      - name: Build ${{ env.REPO_NAME }} with dotnet ${{ env.DOTNET_CHANNEL }} version ${{ env.DOTNET_VERSION }}
+        run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --build-arg dotnet_channel=${{ env.DOTNET_CHANNEL }} --build-arg dotnet_version=${{ env.DOTNET_VERSION }} --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}-$(date +%s)
 
-    - name: Set dotnet channel env
-      run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
+      - name: Set dotnet channel env
+        run: echo "DOTNET_CHANNEL=lts" >> $GITHUB_ENV
 
-    - name: Set dotnet version env
-      run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^^}/latest.version)" >> $GITHUB_ENV
+      - name: Set dotnet version env
+        run: echo "DOTNET_VERSION=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/${DOTNET_CHANNEL^^}/latest.version)" >> $GITHUB_ENV
 
-    - name: Log repository name and dotnet version
-      run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"
+      - name: Log repository name and dotnet version
+        run: echo "Building $REPO_NAME with dotnet version $DOTNET_VERSION"
 
-    - uses: actions/checkout@v2
-    - name: Build ${{ env.REPO_NAME }} with dotnet ${{ env.DOTNET_CHANNEL }} version ${{ env.DOTNET_VERSION }}
-      run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --build-arg dotnet_channel=${{ env.DOTNET_CHANNEL }} --build-arg dotnet_version=${{ env.DOTNET_VERSION }} --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}-$(date +%s)
+      - uses: actions/checkout@v2
+      - name: Build ${{ env.REPO_NAME }} with dotnet ${{ env.DOTNET_CHANNEL }} version ${{ env.DOTNET_VERSION }}
+        run: docker build . --file ${{ env.REPO_NAME }}/Dockerfile --build-arg dotnet_channel=${{ env.DOTNET_CHANNEL }} --build-arg dotnet_version=${{ env.DOTNET_VERSION }} --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ env.DOTNET_CHANNEL }}-$(date +%s)

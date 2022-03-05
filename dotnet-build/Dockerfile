@@ -6,8 +6,6 @@ ARG dotnet_version
 ENV CHANNEL=$dotnet_channel
 ENV VERSION=$dotnet_version
 
-RUN echo $VERSION
-
 # Install .net dependencies
 RUN apk add bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
 RUN apk add libgdiplus --repository https://dl-3.alpinelinux.org/alpine/edge/testing/

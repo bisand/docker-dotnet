@@ -41,7 +41,7 @@ jobs:
       run: echo "'lts $DOTNET_VERSION_LTS\n' >> $CACHE_FILENAME"
 
     - name: Print file hash
-      run: echo "${{ hashFiles(env.CACHE_FILENAME) }}"
+      run: echo "${{ hashFiles('dotnet-runtime.txt') }}"
 
     - name: Set major version env
       run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV

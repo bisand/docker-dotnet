@@ -40,6 +40,9 @@ jobs:
     - name: Create cache file (LTS)
       run: echo "'lts $DOTNET_VERSION_LTS\n' >> $CACHE_FILENAME"
 
+    - name: Where am I?
+      run: echo $(pwd)
+
     - name: Print file hash
       run: echo "${{ hashFiles('**/dotnet-runtime.txt') }}"
 

@@ -32,10 +32,10 @@ jobs:
       run: echo "DOTNET_VERSION_LTS=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Runtime/LTS/latest.version)" >> $GITHUB_ENV
 
     - name: Create cache file (Current)
-      run: echo "'current ${{ env.DOTNET_VERSION_CURRENT }}\n' > ~/${{ env.REPO_NAME }}.txt"
+      run: echo "'current $DOTNET_VERSION_CURRENT\n' > ~/$REPO_NAME.txt"
 
     - name: Create cache file (LTS)
-      run: echo "'lts ${{ env.DOTNET_VERSION_LTS }}\n' >> ~/${{ env.REPO_NAME }}.txt"
+      run: echo "'lts $DOTNET_VERSION_LTS\n' >> ~/$REPO_NAME.txt"
 
     - name: Print file hash
       run: echo "${{ hashFiles('~/${{ env.REPO_NAME }}.txt') }}"

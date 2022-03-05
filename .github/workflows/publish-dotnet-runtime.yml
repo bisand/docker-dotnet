@@ -41,6 +41,10 @@ jobs:
     - name: Set patch version env
       run: echo "VERSION_PATCH=$(cut -d '.' -f 3 <<< $DOTNET_VERSION)" >> $GITHUB_ENV
 
+    - name: Create cache file if it does not exist.
+      if: hashFiles('dotnet_versions.json') == ''
+      run: touch dotnet_versions.json
+
     # Optionally, use `jq` to pull one or more fields from the JSON to include in the SMS message
     - name: Parse data
       id: parse_data

@@ -32,10 +32,10 @@ jobs:
       run: echo "DOTNET_VERSION_LTS=$(wget -qO - https://dotnetcli.azureedge.net/dotnet/Sdk/LTS/latest.version)" >> $GITHUB_ENV
 
     - name: Create cache file (Current)
-      run: echo "${{ env.DOTNET_VERSION_CURRENT }} > ${{ env.REPO_NAME }}-current.txt"
+      run: echo "${{ env.DOTNET_VERSION_CURRENT }} > ~/${{ env.REPO_NAME }}-current.txt"
 
     - name: Create cache file (LTS)
-      run: echo "${{ env.DOTNET_VERSION_LTS }} > ${{ env.REPO_NAME }}-lts.txt"
+      run: echo "${{ env.DOTNET_VERSION_LTS }} > ~/${{ env.REPO_NAME }}-lts.txt"
 
     - name: Set major version env
       run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV
@@ -66,8 +66,8 @@ jobs:
       id: cache
       uses: actions/cache@v2
       with:
-        path: ./
-        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('${{ env.REPO_NAME }}-current.txt', '${{ env.REPO_NAME }}-lts.txt') }}
+        path: ~/
+        key: ${{ runner.os }}-${{ env.REPO_NAME }}-${{ hashFiles('~/${{ env.REPO_NAME }}-current.txt', '~/${{ env.REPO_NAME }}-lts.txt') }}
     
     - name: Build and push ${{ env.REPO_NAME }} (Current)
       uses: docker/build-push-action@v2.9.0

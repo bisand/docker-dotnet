@@ -38,7 +38,7 @@ jobs:
       run: echo "'lts ${{ env.DOTNET_VERSION_LTS }}\n' >> ~/${{ env.REPO_NAME }}.txt"
 
     - name: Print file hash
-      run: echo ${{ hashFiles("~/${{ env.REPO_NAME }}.txt") }}
+      run: echo "${{ hashFiles(~/${{ env.REPO_NAME }}.txt) }}"
 
     - name: Set major version env
       run: echo "VERSION_MAJOR_CURRENT=$(cut -d '.' -f 1 <<< $DOTNET_VERSION_CURRENT)" >> $GITHUB_ENV

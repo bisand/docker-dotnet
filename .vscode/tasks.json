@@ -2,41 +2,95 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "docker-build: debug",
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/demo/webapi/webapi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/demo/webapi/webapi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/demo/webapi/webapi.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "type": "docker-build",
+            "label": "docker-build: debug",
+            "dependsOn": [
+                "build"
+            ],
             "dockerBuild": {
+                "tag": "dockerdebug:dev",
+                "target": "base",
                 "dockerfile": "${workspaceFolder}/demo/webapi/Dockerfile",
-                "context": "${workspaceFolder}/demo/webapi",
-                "tag": "demo-webapi:dev"
+                "context": "${workspaceFolder}",
+                "pull": true
             },
-            "platform": "netCore",
-            // "netCore": {
-            //     "appProject": "${workspaceFolder}/demo/webapi/webapi.csproj"
-            // },
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "netCore": {
+                "appProject": "${workspaceFolder}/demo/webapi/webapi.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: release",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "dockerdebug:latest",
+                "dockerfile": "${workspaceFolder}/demo/webapi/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/demo/webapi/webapi.csproj"
             }
         },
         {
             "type": "docker-run",
-            "label": "debug webapi",
+            "label": "docker-run: debug",
             "dependsOn": [
                 "docker-build: debug"
             ],
-            "dockerRun": {
-                "ports": [
-                    {
-                        "hostPort": 5000,
-                        "containerPort": 5000
-                    }
-                ]
-            },
-            "platform": "netCore",
+            "dockerRun": {},
             "netCore": {
                 "appProject": "${workspaceFolder}/demo/webapi/webapi.csproj",
                 "enableDebugging": true
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: release",
+            "dependsOn": [
+                "docker-build: release"
+            ],
+            "dockerRun": {},
+            "netCore": {
+                "appProject": "${workspaceFolder}/demo/webapi/webapi.csproj"
             }
         }
     ]
